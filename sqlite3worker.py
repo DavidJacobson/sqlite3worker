@@ -216,10 +216,10 @@ class Sqlite3Worker(threading.Thread):
         # A token to track this query with.
         token = str(uuid.uuid4())
         if query.lower().strip().startswith("select"):
-			for each in values:
-				self.sql_queue.put((token, query, each), timeout=5)
-				result.append(self.query_results(token)
+		for each in values:
+			self.sql_queue.put((token, query, each), timeout=5)
+			result.append(self.query_results(token)
             return result
         else:
-			for each in values:
-				self.sql_queue.put((token, query, each), timeout=5)
+		for each in values:
+			self.sql_queue.put((token, query, each), timeout=5)
