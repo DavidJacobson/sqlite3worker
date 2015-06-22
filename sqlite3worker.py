@@ -194,3 +194,32 @@ class Sqlite3Worker(threading.Thread):
             return self.query_results(token)
         else:
             self.sql_queue.put((token, query, values), timeout=5)
+            
+    def execute_many(self, query, values=None):
+        """
+        Execute many queries, given a set of tuples
+        
+        Args:
+            query: the sql string using ? for placeholders of dynamic values.
+            values: A list of tuples containing values for ? in the query.
+        Returns:
+            Relevant info from db, if it is a select statement, it will return the data retrieved
+            As a list
+        """
+        #raise NotImplementedError
+		if self.exit_set:
+            LOGGER.debug("Exit set, not running: %s", query)
+            return "Exit Called"
+        LOGGER.debug("execute: %s", query)
+        values = values or []
+        result = []
+        # A token to track this query with.
+        token = str(uuid.uuid4())
+        if query.lower().strip().startswith("select"):
+			for each in values:
+				self.sql_queue.put((token, query, each), timeout=5)
+				result.append(self.query_results(token)
+            return result
+        else:
+			for each in values:
+				self.sql_queue.put((token, query, each), timeout=5)
